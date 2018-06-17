@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数仓架构和建模基础 数据仓库定义：目的：支持决策分析应用： 离线数据报表、数据挖掘、即席查询四个特征：  面向主题： 数据归类 集成：多种类型数据，来源多，格式多， 集成代表最终统一 非易失的， 写入后一般不修改和删除，多为查询（读）操作 时变性： 一定时间范围内，记录数据变化和其对应的时间  发展阶段：数据仓库的发展大致经历了这样的三个过程： 简单报表阶段：这个阶段，系统的主要目标是解决一些日常">
+<meta property="og:type" content="article">
+<meta property="og:title" content="少亦的平行空间">
+<meta property="og:url" content="http://yoursite.com/2018/06/17/数据仓库架构和建模基础/index.html">
+<meta property="og:site_name" content="少亦的平行空间">
+<meta property="og:description" content="数仓架构和建模基础 数据仓库定义：目的：支持决策分析应用： 离线数据报表、数据挖掘、即席查询四个特征：  面向主题： 数据归类 集成：多种类型数据，来源多，格式多， 集成代表最终统一 非易失的， 写入后一般不修改和删除，多为查询（读）操作 时变性： 一定时间范围内，记录数据变化和其对应的时间  发展阶段：数据仓库的发展大致经历了这样的三个过程： 简单报表阶段：这个阶段，系统的主要目标是解决一些日常">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.yuque.com/lark/0/2018/png/6691/1524039408300-5ffcb51f-d694-486b-bb85-3e2ed7d0077a.png">
+<meta property="og:image" content="https://cdn.yuque.com/lark/0/2018/png/6691/1524041561908-00298837-38d7-41ef-93b7-417a9560ef45.png">
+<meta property="og:image" content="https://cdn.yuque.com/lark/0/2018/png/6691/1524041853974-b461de86-3d2c-4563-8f6b-78354d5e5a2e.png">
+<meta property="og:updated_time" content="2018-06-17T08:22:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="少亦的平行空间">
+<meta name="twitter:description" content="数仓架构和建模基础 数据仓库定义：目的：支持决策分析应用： 离线数据报表、数据挖掘、即席查询四个特征：  面向主题： 数据归类 集成：多种类型数据，来源多，格式多， 集成代表最终统一 非易失的， 写入后一般不修改和删除，多为查询（读）操作 时变性： 一定时间范围内，记录数据变化和其对应的时间  发展阶段：数据仓库的发展大致经历了这样的三个过程： 简单报表阶段：这个阶段，系统的主要目标是解决一些日常">
+<meta name="twitter:image" content="https://cdn.yuque.com/lark/0/2018/png/6691/1524039408300-5ffcb51f-d694-486b-bb85-3e2ed7d0077a.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/17/数据仓库架构和建模基础/"/>
+
+
+
+
+
+  <title> | 少亦的平行空间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">少亦的平行空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">少年不识愁，凭栏亦翘首</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/17/数据仓库架构和建模基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="少亦">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my_lufei.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="少亦的平行空间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-17T16:22:01+08:00">
+                2018-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/17/数据仓库架构和建模基础/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/06/17/数据仓库架构和建模基础/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,374 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.atatech.org/articles/101675#" target="_blank" rel="noopener">数仓架构和建模基础</a></p>
+<h1 id="数据仓库定义："><a href="#数据仓库定义：" class="headerlink" title="数据仓库定义："></a>数据仓库定义：</h1><p>目的：支持决策分析<br>应用： 离线数据报表、数据挖掘、即席查询<br>四个特征：</p>
+<ol>
+<li>面向主题： 数据归类</li>
+<li>集成：多种类型数据，来源多，格式多， 集成代表最终统一</li>
+<li>非易失的， 写入后一般不修改和删除，多为查询（读）操作</li>
+<li>时变性： 一定时间范围内，记录数据变化和其对应的时间</li>
+</ol>
+<h1 id="发展阶段："><a href="#发展阶段：" class="headerlink" title="发展阶段："></a>发展阶段：</h1><p>数据仓库的发展大致经历了这样的三个过程：</p>
+<p>简单报表阶段：这个阶段，系统的主要目标是解决一些日常的工作中业务人员需要的报表，以及生成一些简单的能够帮助领导进行决策所需要的汇总数据。这个阶段的大部分表现形式为数据库和前端报表工具。<br>数据集市阶段：这个阶段，主要是根据某个业务部门的需要，进行一定的数据的采集，整理，按照业务人员的需要，进行多维报表的展现，能够提供对特定业务指导的数据，并且能够提供特定的领导决策数据。<br>数据仓库阶段：这个阶段，主要是按照一定的数据模型，对整个企业的数据进行采集，整理，并且能够按照各个业务部门的需要，提供跨部门的，完全一致的业务报表数据，能够通过数据仓库生成对对业务具有指导性的数据，同时，为领导决策提供全面的数据支持。<br>数据模型的作用：<br>1.进行全面的业务梳理，改进业务流程<br>2.建立全方位的数据视角，消灭信息孤岛和数据差异。<br>3.解决业务的变动和数据仓库的灵活性<br>4.帮助数据仓库系统本身的建设</p>
+<h1 id="数据仓库的架构"><a href="#数据仓库的架构" class="headerlink" title="数据仓库的架构"></a>数据仓库的架构</h1><p><img src="https://cdn.yuque.com/lark/0/2018/png/6691/1524039408300-5ffcb51f-d694-486b-bb85-3e2ed7d0077a.png" alt="undefined"><br>数仓的上游是各种数据源：</p>
+<ul>
+<li>企业内部数据：<ul>
+<li>用户行为日志</li>
+<li>数据库数据</li>
+<li>文本数据</li>
+</ul>
+</li>
+<li>企业外部数据<ul>
+<li>爬虫爬取的数据</li>
+<li>第三方提供的数据<br>通过 ETL将数据导入数据仓库<blockquote>
+<p>ETL(Extract-Transform-Load)记 用来描述将数据从来源端经过抽取（extract）、转换（transform）、加载（load）至目的端的过程。<br>ETL包含两部分，数据加载到数仓，数仓数据加载到外部以支持数据应用<br>广义的ETL还包括 数据清洗步骤，但把数据清洗放在数据仓库来做更好一些，因为这样数仓里的是全部数据。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>数据在数仓中：</p>
+<ul>
+<li>会经过各种计算，从而支持决策分析</li>
+<li>首先对明细数据进行加工：<ul>
+<li>数据清洗</li>
+<li>数据整合</li>
+</ul>
+</li>
+<li>在得到”干净的明细数据后“，在此基础上<ul>
+<li>数据聚合统计</li>
+<li>多维数据模型</li>
+<li>业务模型建设</li>
+</ul>
+</li>
+</ul>
+<p>在数据仓库的数据和计算的基础上：</p>
+<ul>
+<li>搭建总类繁多的数据应用：<ul>
+<li>数据报表、即席查询、数据分析和数据挖掘</li>
+<li>数据应用消费数据仓库的数据分析结果对外提供服务</li>
+<li>数据应用本身也可能会产生新的数据并被归集进数据仓库</li>
+</ul>
+</li>
+</ul>
+<h1 id="数据体系架构"><a href="#数据体系架构" class="headerlink" title="数据体系架构"></a>数据体系架构</h1><ul>
+<li>数据分层的概念<ul>
+<li>便于对数据进行管理、开发 和运维</li>
+</ul>
+</li>
+<li>常见分为3层；<ul>
+<li>ODS(Operational Data Store，操作型数据)<ul>
+<li>保存来自数据源的基本一次的增量或全量数据</li>
+<li>ODS实现了对数据源的统一的一次数据抽取</li>
+<li>数据仓库的计算都基于ODS的数据，不用重复抽取，也不会在数据源上直接进行计算  </li>
+<li>数据仓库和业务系统的解耦(通过ETL接口实现)</li>
+<li>ODS数据和数据源是一致的，便于问题排查</li>
+</ul>
+</li>
+<li>CDM (Common Data Model，通用数据模型)<ul>
+<li>DWD(Data Warehouse Detail，数据仓库明细层数据)<ul>
+<li>从ODS层的数据，经过数据清洗后得到的明细宽表</li>
+</ul>
+</li>
+<li>DWS(Data Warehouse Summary，数据仓库汇总层数据)<ul>
+<li>由 DWD的数据可以经过适当的汇总，通过轻度、重度汇总 得到</li>
+</ul>
+</li>
+<li>DIM(数据维表) </li>
+</ul>
+</li>
+<li>ADS (Application Data Service，面向应用的数据服务层)<ul>
+<li>针对具体专题分析而做的计算产生的表</li>
+<li>数据集市<blockquote>
+<p>数据集市：简称DM，以某个应用为出发点而建设的局部DW，为什么这么说，DM只关心自己需要的数据。不会全盘考虑企业整体的数据架构和应用，每个应用都有自己的DM。所以DM可以基于仓库建设也可以独立建设。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="数据建模基础"><a href="#数据建模基础" class="headerlink" title="数据建模基础"></a>数据建模基础</h1><p>数据仓库的数据来自业务的数据，最终也用于为实现业务目标的计算。数据仓库的模型设计需要从业务出发，一般经过概念模型设计、逻辑模型设计和物理模型设计三个层次，最终的到数据仓库的模型。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">开始=&gt;start: 概念模型设计</span><br><span class="line">结束=&gt;end: 物理模型设计</span><br><span class="line">操作1=&gt;operation: 逻辑模型设计</span><br><span class="line">开始-&gt;操作1-&gt;结束</span><br></pre></td></tr></table></figure></p>
+<h2 id="概念模型设计"><a href="#概念模型设计" class="headerlink" title="概念模型设计"></a>概念模型设计</h2><ul>
+<li>数据仓库是面向主题的</li>
+<li>通过分析和归纳，可以把业务划分成几个主题，并确定各个主题之间的联系<h2 id="逻辑模型设计"><a href="#逻辑模型设计" class="headerlink" title="逻辑模型设计"></a>逻辑模型设计</h2></li>
+<li>定义了数据仓库各种实体、属性和关系，指导后续的数据存储、组织和数据应用的开发<h3 id="Inmon提出的自上而下（EDW-DM）的范式建模理论"><a href="#Inmon提出的自上而下（EDW-DM）的范式建模理论" class="headerlink" title="Inmon提出的自上而下（EDW-DM）的范式建模理论"></a>Inmon提出的自上而下（EDW-DM）的范式建模理论</h3></li>
+<li>三范式<ol>
+<li>第一范式(确保每列保持原子性)：第一范式是指表中的所有字段值都是不可分解的原子值。</li>
+<li>第二范式：确保表中的每列都和主键相关</li>
+<li>第三范式：确保每列都和主键列直接相关,而不是间接相关</li>
+</ol>
+</li>
+<li>优点：易于维护，高度集成，方便主题数据打通，适合复杂数据内容的深度挖掘</li>
+<li>缺点：因为三范式的数据不是多维格式的，交互的时候效率比较低下，不方便上层应用做数据分析</li>
+</ul>
+<h3 id="Kimball的从下至上（DM-DW）的维度建模理论"><a href="#Kimball的从下至上（DM-DW）的维度建模理论" class="headerlink" title="Kimball的从下至上（DM-DW）的维度建模理论"></a>Kimball的从下至上（DM-DW）的维度建模理论</h3><p>在维度建模里，ODS的数据，利用维度建模方法建设一致维度的数据集市。通过一致性维度可以将数据集市联系在一起，由所有的数据集市组成数据仓库。<br>优势：构建迅速，最快的看到投资回报率，敏捷灵活，便于事实数据分析，适合业务分析报表和BI<br>劣势：作为企业资源不太好维护，结构复杂，数据集市集成困难。</p>
+<ol>
+<li>星形模型<br> *　由一个事实表和一组维表组成。每个维表都有一个维作为主键。事实表居中，多个维表呈辐射状分布于其四周，并与事实表连接，形成一个星型结构　<br><img src="https://cdn.yuque.com/lark/0/2018/png/6691/1524041561908-00298837-38d7-41ef-93b7-417a9560ef45.png" alt="undefined"> </li>
+<li>雪花模型<br>雪花模型是在星形模型基础上，基于范式理论做的进一步层次化，将某些维表扩展成事实表，最终形成雪花状的结构。<br>优点：在一定程度上减少了存储空间;规范化的结构更容易更新和维护<br>缺点：雪花模式比较复杂，用户不容易理解;浏览内容相对困难;额外的连接将使查询性能下降<h3 id="复合架构"><a href="#复合架构" class="headerlink" title="复合架构"></a>复合架构</h3>利用范式建模方法，建设原子数据的数据仓库EDW，然后基于EDW，利用维度建模方法建设数据集市。在实际数据仓库中，星型模型和雪花模型是并存的，有利于数据应用和减少计算资源消耗。<br>实际数仓建设中没有必要刻意遵从哪种规范来实践，更多需要业务需要、性能需要之间做权衡。<h2 id="物理模型设计"><a href="#物理模型设计" class="headerlink" title="物理模型设计"></a>物理模型设计</h2>物理模型设计是指根据逻辑模型设计都结果为基础，设计数据对象的物理实现</li>
+</ol>
+<ul>
+<li>表的命名规则和字段</li>
+<li>命名规则如何定义</li>
+<li>字段的类型如何选择</li>
+<li>表是如何设置分区方式以及数据的存储位置和方式（比如是否定时归档或者删除等）。</li>
+<li>表内是否有索引或者主键等等<h3 id="字段命名："><a href="#字段命名：" class="headerlink" title="字段命名："></a>字段命名：</h3>一个合理的表命名方式可以清晰地告诉使用者这些表在数据仓库里处于哪个层次。另外可以通过命名可以一目了然地让使用者了解数据的归属、含义、更新频率等重要信息，减少数据的查询和理解的成本<br><img src="https://cdn.yuque.com/lark/0/2018/png/6691/1524041853974-b461de86-3d2c-4563-8f6b-78354d5e5a2e.png" alt="undefined"><br>图是一个典型的命名方式</li>
+</ul>
+<h3 id="数据存储周期"><a href="#数据存储周期" class="headerlink" title="数据存储周期"></a>数据存储周期</h3><p>数据仓库里的每一份数据，在从外部数据源导入后，又会进过多次的计算，中间也难免会有中间数据的落盘。真实存在数据仓库中间的数据经常会膨胀数倍甚至数十倍。合理地针对有用的数据进行归档以及对无用数据的及时删除，可以减少存储和管理的成本。</p>
+<blockquote>
+<p>参考链接：<br><a href="https://www.ibm.com/developerworks/cn/data/library/techarticles/dm-0803zhousb/" target="_blank" rel="noopener">浅谈数据仓库建设中的数据建模方法</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/16/分布式系统原理/" rel="next" title="分布式系统原理学习笔记">
+                <i class="fa fa-chevron-left"></i> 分布式系统原理学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my_lufei.png"
+                alt="少亦" />
+            
+              <p class="site-author-name" itemprop="name">少亦</p>
+              <p class="site-description motion-element" itemprop="description">一个要成为海贼王的文艺程序员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据仓库定义："><span class="nav-number">1.</span> <span class="nav-text">数据仓库定义：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发展阶段："><span class="nav-number">2.</span> <span class="nav-text">发展阶段：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据仓库的架构"><span class="nav-number">3.</span> <span class="nav-text">数据仓库的架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据体系架构"><span class="nav-number">4.</span> <span class="nav-text">数据体系架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据建模基础"><span class="nav-number">5.</span> <span class="nav-text">数据建模基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念模型设计"><span class="nav-number">5.1.</span> <span class="nav-text">概念模型设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑模型设计"><span class="nav-number">5.2.</span> <span class="nav-text">逻辑模型设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Inmon提出的自上而下（EDW-DM）的范式建模理论"><span class="nav-number">5.2.1.</span> <span class="nav-text">Inmon提出的自上而下（EDW-DM）的范式建模理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kimball的从下至上（DM-DW）的维度建模理论"><span class="nav-number">5.2.2.</span> <span class="nav-text">Kimball的从下至上（DM-DW）的维度建模理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复合架构"><span class="nav-number">5.2.3.</span> <span class="nav-text">复合架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理模型设计"><span class="nav-number">5.3.</span> <span class="nav-text">物理模型设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字段命名："><span class="nav-number">5.3.1.</span> <span class="nav-text">字段命名：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据存储周期"><span class="nav-number">5.3.2.</span> <span class="nav-text">数据存储周期</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">少亦</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">36.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'njRER4GAcWS64Q5etRDXDdSP-gzGzoHsz',
+        appKey: 'ctyByaG53pyoqmAkqQTnXTt9',
+        placeholder: '感谢你来读我写的东西，有什么感想可以留在这里哈ヾ(≧O≦)〃',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'2' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
