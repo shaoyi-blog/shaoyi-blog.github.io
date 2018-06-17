@@ -97,7 +97,7 @@
 <meta property="og:description" content="分布式系统原理·刘杰 分布式系统基础定义 12&amp;gt; 分布式系统：利用多台计算机协同解决单台计算机无法解决的计算、存储问题&amp;gt;  单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点 常见的异常情况 分布式系统的核心问题就是解决各种异常情况 机器宕机(机器出问题)： 最常见，一般需要人工介入 节点重启后会丢失内存信息（部分分布式系统">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cdn.yuque.com/yuque/0/2018/png/94821/1529219892350-684f2bac-e976-40c4-a23b-4ad8aaa4b62c.png">
-<meta property="og:updated_time" content="2018-06-17T08:03:00.000Z">
+<meta property="og:updated_time" content="2018-06-17T08:10:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式系统原理学习笔记">
 <meta name="twitter:description" content="分布式系统原理·刘杰 分布式系统基础定义 12&amp;gt; 分布式系统：利用多台计算机协同解决单台计算机无法解决的计算、存储问题&amp;gt;  单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点 常见的异常情况 分布式系统的核心问题就是解决各种异常情况 机器宕机(机器出问题)： 最常见，一般需要人工介入 节点重启后会丢失内存信息（部分分布式系统">
@@ -362,7 +362,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  7,496 字
+                  7,494 字
                 </span>
               
 
@@ -461,7 +461,7 @@
 </ul>
 </blockquote>
 <ul>
-<li><strong>副本一致性</strong>：分布式系统通过副本控制协议，使得从系统外部读取系统内部的各个副本的数据在一定的约束提哦啊见下相同，称之为 副本一致性（consistency）<ul>
+<li><strong>副本一致性</strong>：分布式系统通过副本控制协议，使得从系统外部读取系统内部的各个副本的数据在一定的约束条件下相同，称之为 副本一致性（consistency）<ul>
 <li>强一致性(strong consistency):<ul>
 <li>任何时刻，任何用户或者节点 都可以读到 最近一次成功更新后的副本数据。</li>
 <li>一致性最高，最难实现</li>
@@ -684,13 +684,13 @@
 </ul>
 </li>
 <li>缺点：<ul>
-<li>协议过程通常比较复杂。尤其当去中心化协议需要实现强一致性时，协议流程变得复杂且不容易理解<br>Paxos 是唯一在工程中得到应用的强一致性去中心化副本控制协议<h1 id="Lease机制"><a href="#Lease机制" class="headerlink" title="Lease机制"></a>Lease机制</h1><blockquote>
+<li>协议过程通常比较复杂。尤其当去中心化协议需要实现强一致性时，协议流程变得复杂且不容易理解<br>Paxos 是唯一在工程中得到应用的强一致性去中心化副本控制协议</li>
+</ul>
+</li>
+</ul>
+<h1 id="Lease机制"><a href="#Lease机制" class="headerlink" title="Lease机制"></a>Lease机制</h1><blockquote>
 <p>Lease 机制是最重要的分布式协议，广泛应用于各种实际的分布式系统中</p>
 </blockquote>
-</li>
-</ul>
-</li>
-</ul>
 <h3 id="简单的例子："><a href="#简单的例子：" class="headerlink" title="简单的例子："></a>简单的例子：</h3><ol>
 <li>在一个分布式系统中，有一个中心服务器节点，中心服务器存储、维护着一些数据，这些数据是系统的元数据。系统中其他的节点通过访问中心服务器节点读取、修改其上的元数据(<span data-type="background" style="background-color:#FADB14">那么中心服务器节点的性能成为系统的瓶颈</span>)</li>
 <li>心服务器在向各节点发送数据时同时向节点颁发一个 lease。每个 lease 具有一个有效期，和信用卡上的有效期类似，lease 上的有效期通常是一个明确的时间点</li>
@@ -726,12 +726,14 @@
 </ol>
 <ul>
 <li>Lease 的有效期虽然是一个确定的时间点，当颁发者在发布 lease 时通常都是将当前时间加上一个固定的时长从而计算出 lease 的有效期。</li>
-<li>工程中，常选择的 lease 时长是 10 秒级别，这是一个经过验证的经验值，实践中可以作为参考并综合选择合适的时长<h3 id="GFS-中的-Lease"><a href="#GFS-中的-Lease" class="headerlink" title="GFS 中的 Lease"></a>GFS 中的 Lease</h3>GFS 中使用 Lease 确定 Chuck 的 Primary 副本。Lease 由 Master 节点颁发给 primary 副本，持有Lease 的副本成为 primary 副本。Primary 副本控制该 chuck 的数据更新流量，确定并发更新操作在chuck 上的执行顺序。GFS 中的 Lease 信息由 Master 在响应各个节点的 HeartBeat 时附带传递(piggyback)。对于每一个 chuck，其上的并发更新操作的顺序在各个副本上是一致的，首先 master选择 primary 的顺序，即颁发 Lease 的顺序，在每一任的 primary 任期内，每个 primary 决定并发更新的顺序，从而更新操作的顺序最终全局一致。当 GFS 的 master 失去某个节点的 HeartBeat 时，只需待该节点上的 primary chuck 的 Lease 超时，就可以为这些 chuck 重新选择 primary 副本并颁发 lease。<h3 id="Chubby-与-Zookeeper-中的-Lease"><a href="#Chubby-与-Zookeeper-中的-Lease" class="headerlink" title="Chubby 与 Zookeeper 中的 Lease"></a>Chubby 与 Zookeeper 中的 Lease</h3><h1 id="Quorum-机制"><a href="#Quorum-机制" class="headerlink" title="Quorum 机制"></a>Quorum 机制</h1><h2 id="write-all-read-one"><a href="#write-all-read-one" class="headerlink" title="write-all-read-one"></a>write-all-read-one</h2><blockquote>
-<p>是一种最简单的副本控制规则，顾名思义即在更新时写所有的副本，只有在所有的副本上更新成功，才认为更新成功，从而保证所有的副本一致，这样在读取数据时可以读任一副本上的数据。<br>其实现需要依赖一种假设：<br>假设有一种 magic 的机制，当某次更新操作 wi 一旦在所有 N 个副本上都成功，此时全局都能知道这个信息，此后读取操作将指定读取数据版本为 vi 的数据，称在所有 N 个副本上都成功的更新操作为“成功提交的更新操作”，称对应的数据为“成功提交的数据”。在 WARO 中，如果某次更新操作 wi 在某个副本上失败，此时该副本的最新的数据只有 vi-1，由于不满足在所有 N 个副本上都成功，则 wi 不是一个“成功提交的更新操作”，此时，虽然其他 N-1 个副本上最新的数据是 vi，但 vi 不是一个“成功提交的数据”，最新的成功提交的数据只是 vi-1<br><span data-type="background" style="background-color:#FADB14">这里需要特别强调的是，在工程实践中，这种 magic 的机制往往较难实现或效率较低。</span></p>
-<h2 id="Quorum-定义"><a href="#Quorum-定义" class="headerlink" title="Quorum 定义"></a>Quorum 定义</h2><p>WARO 牺牲了更新服务的可用性，最大程度的增强读服务的可用性。下面将 WARO 的条件进<br>行松弛，从而使得可以在读写服务可用性之间做折中，得出 Quorum 机制:<br>在 Quorum 机制下，当某次更新操作 wi 一旦在所有 N 个副本中的 W 个副本上都成功，则就称该更新操作为“成功提交的更新操作”，称对应的数据为“成功提交的数据”。<span data-type="background" style="background-color:#FADB14">令 R&gt;N-W</span>，由于更新操作 wi 仅在 W 个副本上成功，所以在读取数据时，最多需要读取 R 个副本则一定能读到 wi 更新后的数据 vi 。如果某次更新 wi 在 W 个副本上成功，由于 W+R&gt;N，任意 R 个副本组成的集合一定与成功的W个副本组成的集合有交集，所以读取R个副本一定能读到wi更新后的数据vi。如图 2-10，Quorum 机制的原理可以文森图表示。</p>
-</blockquote>
-</li>
+<li>工程中，常选择的 lease 时长是 10 秒级别，这是一个经过验证的经验值，实践中可以作为参考并综合选择合适的时长<h3 id="GFS-中的-Lease"><a href="#GFS-中的-Lease" class="headerlink" title="GFS 中的 Lease"></a>GFS 中的 Lease</h3>GFS 中使用 Lease 确定 Chuck 的 Primary 副本。Lease 由 Master 节点颁发给 primary 副本，持有Lease 的副本成为 primary 副本。Primary 副本控制该 chuck 的数据更新流量，确定并发更新操作在chuck 上的执行顺序。GFS 中的 Lease 信息由 Master 在响应各个节点的 HeartBeat 时附带传递(piggyback)。对于每一个 chuck，其上的并发更新操作的顺序在各个副本上是一致的，首先 master选择 primary 的顺序，即颁发 Lease 的顺序，在每一任的 primary 任期内，每个 primary 决定并发更新的顺序，从而更新操作的顺序最终全局一致。当 GFS 的 master 失去某个节点的 HeartBeat 时，只需待该节点上的 primary chuck 的 Lease 超时，就可以为这些 chuck 重新选择 primary 副本并颁发 lease。<h3 id="Chubby-与-Zookeeper-中的-Lease"><a href="#Chubby-与-Zookeeper-中的-Lease" class="headerlink" title="Chubby 与 Zookeeper 中的 Lease"></a>Chubby 与 Zookeeper 中的 Lease</h3></li>
 </ul>
+<h1 id="Quorum-机制"><a href="#Quorum-机制" class="headerlink" title="Quorum 机制"></a>Quorum 机制</h1><h2 id="write-all-read-one"><a href="#write-all-read-one" class="headerlink" title="write-all-read-one"></a>write-all-read-one</h2><blockquote>
+<p>是一种最简单的副本控制规则，顾名思义即在更新时写所有的副本，只有在所有的副本上更新成功，才认为更新成功，从而保证所有的副本一致，这样在读取数据时可以读任一副本上的数据。<br>其实现需要依赖一种假设：<br>假设有一种 magic 的机制，当某次更新操作 wi 一旦在所有 N 个副本上都成功，此时全局都能知道这个信息，此后读取操作将指定读取数据版本为 vi 的数据，称在所有 N 个副本上都成功的更新操作为“成功提交的更新操作”，称对应的数据为“成功提交的数据”。在 WARO 中，如果某次更新操作 wi 在某个副本上失败，此时该副本的最新的数据只有 vi-1，由于不满足在所有 N 个副本上都成功，则 wi 不是一个“成功提交的更新操作”，此时，虽然其他 N-1 个副本上最新的数据是 vi，但 vi 不是一个“成功提交的数据”，最新的成功提交的数据只是 vi-1<br><span data-type="background" style="background-color:#FADB14">这里需要特别强调的是，在工程实践中，这种 magic 的机制往往较难实现或效率较低。</span></p>
+</blockquote>
+<h2 id="Quorum-定义"><a href="#Quorum-定义" class="headerlink" title="Quorum 定义"></a>Quorum 定义</h2><blockquote>
+<p>WARO 牺牲了更新服务的可用性，最大程度的增强读服务的可用性。下面将 WARO 的条件进<br>行松弛，从而使得可以在读写服务可用性之间做折中，得出 Quorum 机制:<br>在 Quorum 机制下，当某次更新操作 wi 一旦在所有 N 个副本中的 W 个副本上都成功，则就称该更新操作为“成功提交的更新操作”，称对应的数据为“成功提交的数据”。<span data-type="background" style="background-color:#FADB14">令 R&gt;N-W</span>，由于更新操作 wi 仅在 W 个副本上成功，所以在读取数据时，最多需要读取 R 个副本则一定能读到 wi 更新后的数据 vi 。如果某次更新 wi 在 W 个副本上成功，由于 W+R&gt;N，任意 R 个副本组成的集合一定与成功的W个副本组成的集合有交集，所以读取R个副本一定能读到wi更新后的数据vi。如图 2-10，Quorum 机制的原理可以文森图表示。</p>
+</blockquote>
 <p><img src="https://cdn.yuque.com/yuque/0/2018/png/94821/1529219892350-684f2bac-e976-40c4-a23b-4ad8aaa4b62c.png" alt="image.png | center | 411x191"></p>
 <p><span data-type="background" style="background-color:#FADB14">仅仅依赖 quorum 机制是无法保证强一致性的。因为仅有 quorum 机制时无法确定最新已成功提交的版本号，除非将最新已提交的版本号作为元数据由特定的元数据服务器或元数据集群管理，否则很难确定最新成功提交的版本号</span></p>
 <p>Quorum 机制的三个系统参数 N、W、R 控制了系统的可用性，也是系统对用户的服务承诺:数据最多有 N 个副本，但数据更新成功 W 个副本即返回用户成功。对于一致性要求较高的 Quorum 系统，系统还应该承诺任何时候不读取未成功提交的数据，即读取到的数据都是曾经在 W 个副本上成功的数据。</p>
@@ -747,14 +749,18 @@
 <p>分布式系统原理介绍</p>
 <h1 id="日志技术"><a href="#日志技术" class="headerlink" title="日志技术"></a>日志技术</h1><blockquote>
 <p>日志技术是宕机恢复的主要技术之一</p>
+</blockquote>
 <h2 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log:"></a>Redo Log:</h2><p><strong>Redo Log 更新流程</strong></p>
 <ol>
 <li>将更新操作的结果(例如 Set K1=1，则记录 K1=1)以追加写(append)的方式写入磁盘的日志文件</li>
 <li>按更新操作修改内存中的数据</li>
 <li>返回更新成功</li>
-<li><span data-type="background" style="background-color:#FADB14">Redo 写入日志的是更新操作完成后的结果</span><br><strong>Redo Log 的宕机恢复<br></strong>1. 从头读取日志文件中的每次更新操作的结果，用这些结果修改内存中的数据。<br>从 Redo Log 的宕机恢复流程也可以看出，只有写入日志文件的更新结果才能在宕机后恢复。这也是为什么在 Redo Log 流程中需要先更新日志文件再更新内存中的数据的原因<h2 id="Check-point"><a href="#Check-point" class="headerlink" title="Check point:"></a>Check point:</h2>宕机恢复流量的缺点是需要回放所有 redo 日志，效率较低，假如需要恢复的操作非常多，那么这个宕机恢复过程将非常漫长。解决这一问题的方法即引入 check point 技术。在简化的模型下，checkpoint 技术的过程即将内存中的数据以某种易于重新加载的数据组织方式完整的 dump 到磁盘，从而减少宕机恢复时需要回放的日志数据。</li>
-</ol>
+<li><span data-type="background" style="background-color:#FADB14">Redo 写入日志的是更新操作完成后的结果</span><br><strong>Redo Log 的宕机恢复<br></strong>1. 从头读取日志文件中的每次更新操作的结果，用这些结果修改内存中的数据。<blockquote>
+<p>从 Redo Log 的宕机恢复流程也可以看出，只有写入日志文件的更新结果才能在宕机后恢复。这也是为什么在 Redo Log 流程中需要先更新日志文件再更新内存中的数据的原因</p>
 </blockquote>
+</li>
+</ol>
+<h2 id="Check-point"><a href="#Check-point" class="headerlink" title="Check point:"></a>Check point:</h2><p>宕机恢复流量的缺点是需要回放所有 redo 日志，效率较低，假如需要恢复的操作非常多，那么这个宕机恢复过程将非常漫长。解决这一问题的方法即引入 check point 技术。在简化的模型下，checkpoint 技术的过程即将内存中的数据以某种易于重新加载的数据组织方式完整的 dump 到磁盘，从而减少宕机恢复时需要回放的日志数据。</p>
 <h1 id="Paxos-协议："><a href="#Paxos-协议：" class="headerlink" title="Paxos 协议："></a>Paxos 协议：</h1><blockquote>
 <p>Paxos 协议是少数在工程实践中证实的强一致性、高可用的去<strong>中心化分布式协议</strong><br>Paxos 协议的流程较为复杂，但其基本思想却不难理解，类似于人类社会的投票过程。Paxos 协议中，有一组完全对等的参与节点(称为 accpetor)，这组节点各自就某一事件做出决议，如果某个决议获得了超过半数节点的同意则生效。Paxos 协议中只要有超过一半的节点正常，就可以工作，能很好对抗宕机、网络分化等异常情况。</p>
 <ul>
