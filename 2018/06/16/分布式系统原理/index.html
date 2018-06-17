@@ -97,7 +97,7 @@
 <meta property="og:description" content="分布式系统原理·刘杰 分布式系统基础定义 12&amp;gt; 分布式系统：利用多台计算机协同解决单台计算机无法解决的计算、存储问题&amp;gt;  单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点 常见的异常情况 分布式系统的核心问题就是解决各种异常情况 机器宕机(机器出问题)： 最常见，一般需要人工介入 节点重启后会丢失内存信息（部分分布式系统">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cdn.yuque.com/yuque/0/2018/png/94821/1529219892350-684f2bac-e976-40c4-a23b-4ad8aaa4b62c.png">
-<meta property="og:updated_time" content="2018-06-17T08:10:00.000Z">
+<meta property="og:updated_time" content="2018-06-17T08:14:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式系统原理学习笔记">
 <meta name="twitter:description" content="分布式系统原理·刘杰 分布式系统基础定义 12&amp;gt; 分布式系统：利用多台计算机协同解决单台计算机无法解决的计算、存储问题&amp;gt;  单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点&amp;lt;—–&amp;gt;网络&amp;lt;—–&amp;gt;单个节点 常见的异常情况 分布式系统的核心问题就是解决各种异常情况 机器宕机(机器出问题)： 最常见，一般需要人工介入 节点重启后会丢失内存信息（部分分布式系统">
@@ -671,13 +671,12 @@
 </ol>
 </li>
 <li>工程应用：<ol>
-<li>GFS 系统的副本控制协议是典型的 Primary-Secondary 型协议，Primary 副本由 Master 指定，Primary 副本决定并发更新操作的顺序。虽然在 GFS 中，更新操作的数据由客户端提交，并在各个副本之间流式的传输，及由上一个副本传递到下一个副本，每个副本都即接受其他副本的更新，也向下更新另一个副本，但是数据的更新过程完全是由 primary 控制的，所以也可以认为数据是由primary 副本同步到 secondary 副本的。<h2 id="去中心化副本控制协议"><a href="#去中心化副本控制协议" class="headerlink" title="去中心化副本控制协议"></a>去中心化副本控制协议</h2><blockquote>
+<li>GFS 系统的副本控制协议是典型的 Primary-Secondary 型协议，Primary 副本由 Master 指定，Primary 副本决定并发更新操作的顺序。虽然在 GFS 中，更新操作的数据由客户端提交，并在各个副本之间流式的传输，及由上一个副本传递到下一个副本，每个副本都即接受其他副本的更新，也向下更新另一个副本，但是数据的更新过程完全是由 primary 控制的，所以也可以认为数据是由primary 副本同步到 secondary 副本的。</li>
+</ol>
+</li>
+</ol>
+<h2 id="去中心化副本控制协议"><a href="#去中心化副本控制协议" class="headerlink" title="去中心化副本控制协议"></a>去中心化副本控制协议</h2><blockquote>
 <p>与中心化副本系统协议最大的不同是，去中心化副本控制协议没有中心节点，协议中所有的节点都是完全对等的，节点之间通过平等协商达到一致</p>
-</blockquote>
-</li>
-</ol>
-</li>
-</ol>
 <ul>
 <li>优点：<ul>
 <li>没有因为中心化节点异常而带来的停服务等问题</li>
@@ -688,6 +687,7 @@
 </ul>
 </li>
 </ul>
+</blockquote>
 <h1 id="Lease机制"><a href="#Lease机制" class="headerlink" title="Lease机制"></a>Lease机制</h1><blockquote>
 <p>Lease 机制是最重要的分布式协议，广泛应用于各种实际的分布式系统中</p>
 </blockquote>
@@ -698,9 +698,11 @@
 </ol>
 <ul>
 <li>lease 机制可以容错的关键是:<ul>
-<li>服务器一旦发出数据及 lease，无论客户端是否收到，也无论后续客户端是否宕机，也无论后续网络是否正常，服务器只要等待 lease 超时，就可以保证对应的客户端节点不会再继续 cache 数据，从而可以放心的修改数据而不会破坏 cache 的一致性。<h3 id="lease机制的本质："><a href="#lease机制的本质：" class="headerlink" title="lease机制的本质："></a>lease机制的本质：</h3></li>
+<li>服务器一旦发出数据及 lease，无论客户端是否收到，也无论后续客户端是否宕机，也无论后续网络是否正常，服务器只要等待 lease 超时，就可以保证对应的客户端节点不会再继续 cache 数据，从而可以放心的修改数据而不会破坏 cache 的一致性。</li>
 </ul>
 </li>
+</ul>
+<h3 id="lease机制的本质："><a href="#lease机制的本质：" class="headerlink" title="lease机制的本质："></a>lease机制的本质：</h3><ul>
 <li>lease 的定义:<ul>
 <li>Lease 是由颁发者授予的在某一有效期内的承诺</li>
 </ul>
@@ -710,25 +712,27 @@
 <li>Lease 机制能较好的容错节点宕机</li>
 <li>lease 机制不依赖于存储</li>
 <li>Lease 机制依赖于有效期，这就要求颁发者和接收者的时钟是同步的：<ul>
-<li>为防止出现时钟不同步，实践中的通常做法是将颁发者的有效期设置得比接收者的略大，只需大过时钟误差就可以避免对 lease 的有效性的影响<h3 id="基于-lease-机制确定节点状态"><a href="#基于-lease-机制确定节点状态" class="headerlink" title="基于 lease 机制确定节点状态"></a>基于 lease 机制确定节点状态</h3>🌰说明：</li>
+<li>为防止出现时钟不同步，实践中的通常做法是将颁发者的有效期设置得比接收者的略大，只需大过时钟误差就可以避免对 lease 的有效性的影响</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
+<h3 id="基于-lease-机制确定节点状态"><a href="#基于-lease-机制确定节点状态" class="headerlink" title="基于 lease 机制确定节点状态"></a>基于 lease 机制确定节点状态</h3><p>🌰说明：</p>
 <ol>
 <li><p>在一个 primary-secondary 架构的系统中，有三个节点 A、B、C 互为副本，其中有一个节点为 primary，且同一时刻只能有一个 primary 节点。另有一个节点 Q 负责判断节点 A、B、C的状态，一旦 Q 发现 primary 异常，节点 Q 将选择另一个节点作为 primary。假设最开始时节点 A为 primary，B、C 为 secondary。节点 Q 需要判断节点 A、B、C 的状态是否正常。</p>
 </li>
 <li><p>由中心节点向其他节点发送 lease，若某个节点持有有效的 lease，则认为该节点正常可以提供服务。用于例 2.3.1 中，节点 A、B、C 依然周期性的发送 heart beat 报告自身状态，节点 Q 收到 heart beat后发送一个 lease，表示节点 Q 确认了节点 A、B、C 的状态，并允许节点在 lease 有效期内正常工作。节点 Q 可以给 primary 节点一个特殊的 lease，表示节点可以作为 primary 工作。一旦节点 Q 希望切换新的 primary，则只需等前一个 primary 的 lease 过期，则就可以安全的颁发新的 lease 给新的primary 节点，而不会出现“双主”问题。</p>
 </li>
 <li><p>在实际系统中，若用一个中心节点发送 lease 也有很大的风险，一旦该中心节点宕机或网络异常，则所有的节点没有 lease，从而造成系统高度不可用。为此，实际系统总是使用多个中心节点互为副本，成为一个小的集群，该小集群具有高可用性，对外提供颁发 lease 的功能。chubby 和 zookeeper都是基于这样的设计</p>
-<h3 id="lease-的有效期时间选择"><a href="#lease-的有效期时间选择" class="headerlink" title="lease 的有效期时间选择:"></a>lease 的有效期时间选择:</h3></li>
+</li>
 </ol>
-<ul>
+<h3 id="lease-的有效期时间选择"><a href="#lease-的有效期时间选择" class="headerlink" title="lease 的有效期时间选择:"></a>lease 的有效期时间选择:</h3><ul>
 <li>Lease 的有效期虽然是一个确定的时间点，当颁发者在发布 lease 时通常都是将当前时间加上一个固定的时长从而计算出 lease 的有效期。</li>
-<li>工程中，常选择的 lease 时长是 10 秒级别，这是一个经过验证的经验值，实践中可以作为参考并综合选择合适的时长<h3 id="GFS-中的-Lease"><a href="#GFS-中的-Lease" class="headerlink" title="GFS 中的 Lease"></a>GFS 中的 Lease</h3>GFS 中使用 Lease 确定 Chuck 的 Primary 副本。Lease 由 Master 节点颁发给 primary 副本，持有Lease 的副本成为 primary 副本。Primary 副本控制该 chuck 的数据更新流量，确定并发更新操作在chuck 上的执行顺序。GFS 中的 Lease 信息由 Master 在响应各个节点的 HeartBeat 时附带传递(piggyback)。对于每一个 chuck，其上的并发更新操作的顺序在各个副本上是一致的，首先 master选择 primary 的顺序，即颁发 Lease 的顺序，在每一任的 primary 任期内，每个 primary 决定并发更新的顺序，从而更新操作的顺序最终全局一致。当 GFS 的 master 失去某个节点的 HeartBeat 时，只需待该节点上的 primary chuck 的 Lease 超时，就可以为这些 chuck 重新选择 primary 副本并颁发 lease。<h3 id="Chubby-与-Zookeeper-中的-Lease"><a href="#Chubby-与-Zookeeper-中的-Lease" class="headerlink" title="Chubby 与 Zookeeper 中的 Lease"></a>Chubby 与 Zookeeper 中的 Lease</h3></li>
+<li>工程中，常选择的 lease 时长是 10 秒级别，这是一个经过验证的经验值，实践中可以作为参考并综合选择合适的时长</li>
 </ul>
-<h1 id="Quorum-机制"><a href="#Quorum-机制" class="headerlink" title="Quorum 机制"></a>Quorum 机制</h1><h2 id="write-all-read-one"><a href="#write-all-read-one" class="headerlink" title="write-all-read-one"></a>write-all-read-one</h2><blockquote>
+<h3 id="GFS-中的-Lease"><a href="#GFS-中的-Lease" class="headerlink" title="GFS 中的 Lease"></a>GFS 中的 Lease</h3><p>GFS 中使用 Lease 确定 Chuck 的 Primary 副本。Lease 由 Master 节点颁发给 primary 副本，持有Lease 的副本成为 primary 副本。Primary 副本控制该 chuck 的数据更新流量，确定并发更新操作在chuck 上的执行顺序。GFS 中的 Lease 信息由 Master 在响应各个节点的 HeartBeat 时附带传递(piggyback)。对于每一个 chuck，其上的并发更新操作的顺序在各个副本上是一致的，首先 master选择 primary 的顺序，即颁发 Lease 的顺序，在每一任的 primary 任期内，每个 primary 决定并发更新的顺序，从而更新操作的顺序最终全局一致。当 GFS 的 master 失去某个节点的 HeartBeat 时，只需待该节点上的 primary chuck 的 Lease 超时，就可以为这些 chuck 重新选择 primary 副本并颁发 lease。</p>
+<h3 id="Chubby-与-Zookeeper-中的-Lease"><a href="#Chubby-与-Zookeeper-中的-Lease" class="headerlink" title="Chubby 与 Zookeeper 中的 Lease"></a>Chubby 与 Zookeeper 中的 Lease</h3><h1 id="Quorum-机制"><a href="#Quorum-机制" class="headerlink" title="Quorum 机制"></a>Quorum 机制</h1><h2 id="write-all-read-one"><a href="#write-all-read-one" class="headerlink" title="write-all-read-one"></a>write-all-read-one</h2><blockquote>
 <p>是一种最简单的副本控制规则，顾名思义即在更新时写所有的副本，只有在所有的副本上更新成功，才认为更新成功，从而保证所有的副本一致，这样在读取数据时可以读任一副本上的数据。<br>其实现需要依赖一种假设：<br>假设有一种 magic 的机制，当某次更新操作 wi 一旦在所有 N 个副本上都成功，此时全局都能知道这个信息，此后读取操作将指定读取数据版本为 vi 的数据，称在所有 N 个副本上都成功的更新操作为“成功提交的更新操作”，称对应的数据为“成功提交的数据”。在 WARO 中，如果某次更新操作 wi 在某个副本上失败，此时该副本的最新的数据只有 vi-1，由于不满足在所有 N 个副本上都成功，则 wi 不是一个“成功提交的更新操作”，此时，虽然其他 N-1 个副本上最新的数据是 vi，但 vi 不是一个“成功提交的数据”，最新的成功提交的数据只是 vi-1<br><span data-type="background" style="background-color:#FADB14">这里需要特别强调的是，在工程实践中，这种 magic 的机制往往较难实现或效率较低。</span></p>
 </blockquote>
 <h2 id="Quorum-定义"><a href="#Quorum-定义" class="headerlink" title="Quorum 定义"></a>Quorum 定义</h2><blockquote>
@@ -744,8 +748,10 @@
 <li>若存在个数据少于 W 个，假设为 X 个，则继续读取其他副本，直若成功读取到 W 个该版本的副本，则该数据为最新的成功提交的数据;如果在所有副本中该数据的个数肯定不满足 W 个，则 R 中版本号第二大的为最新的成功提交的副本。</li>
 </ol>
 </li>
-<li><strong>可以看出，在单纯使用 Quorum 机制时，若要确定最新的成功提交的版本，最多需要读取 R+(W-R-1)=N 个副本，当出现任一副本异常时，读最新的成功提交的版本这一功能都有可能不可用。</strong><h2 id="基于-Quorum-机制选择-primary"><a href="#基于-Quorum-机制选择-primary" class="headerlink" title="基于 Quorum 机制选择 primary"></a>基于 Quorum 机制选择 primary</h2>在 primary-secondary 协议中，当 primary 异常时，需要选择出一个新的 primary，之后 secondary副本与 primary 同步数据。通常情况下，选择新的 primary 的工作是由某一中心节点完成的，在引入quorum 机制后，常用的 primary 选择方式与读取数据的方式类似，即中心节点读取 R 个副本，选择R 个副本中版本号最高的副本作为新的 primary。新 primary 与至少 W 个副本完成数据同步后作为新的 primary 提供读写服务。首先，R 个副本中版本号最高的副本一定蕴含了最新的成功提交的数据。再者，虽然不能确定最高版本号的数是一个成功提交的数据，但新的 primary 在随后与 secondary 同步数据，使得该版本的副本个数达到 W，从而使得该版本的数据成为成功提交的数据。<h3 id="GFS-中的-Quorum"><a href="#GFS-中的-Quorum" class="headerlink" title="GFS 中的 Quorum"></a>GFS 中的 Quorum</h3>GFS 使用 WARO 机制读写副本，即如果更新所有副本成功则认为更新成功，一旦更新成功，则可以任意选择一个副本读取数据;如果更新某个副本失败，则更显失败，副本之间处于不一致的状态。GFS 系统不保证异常状态时副本的一致性，GFS 系统需要上层应用通过 Checksum 等机制自行判断数据是否合法。值得注意的是 GFS 中的 append 操作，一旦 append 操作某个 chunck 的副本上失败，GFS 系统会自动新增一个 chunck 并尝试 append 操作，由于可以让新增的 chunck 在正常的机器上创建，从而解决了由于 WARO 造成的系统可用性下降问题。进而在 GFS 中，append 操作不保证一定在文件的结尾进行，由于在新增的 chunk 上重试 append，append 的数据可能会出现多份重复的现象，但每个 append 操作会返回用户最终成功的 offset 位置，在这个位置上，任意读取某个副本一定可以读到写入的数据。这种在新增 chunk 上进行尝试的思路，大大增大了系统的容错能力，提高了系统可用性，是一种非常值得借鉴的设计思路。</li>
+<li><strong>可以看出，在单纯使用 Quorum 机制时，若要确定最新的成功提交的版本，最多需要读取 R+(W-R-1)=N 个副本，当出现任一副本异常时，读最新的成功提交的版本这一功能都有可能不可用。</strong></li>
 </ol>
+<h2 id="基于-Quorum-机制选择-primary"><a href="#基于-Quorum-机制选择-primary" class="headerlink" title="基于 Quorum 机制选择 primary"></a>基于 Quorum 机制选择 primary</h2><p>在 primary-secondary 协议中，当 primary 异常时，需要选择出一个新的 primary，之后 secondary副本与 primary 同步数据。通常情况下，选择新的 primary 的工作是由某一中心节点完成的，在引入quorum 机制后，常用的 primary 选择方式与读取数据的方式类似，即中心节点读取 R 个副本，选择R 个副本中版本号最高的副本作为新的 primary。新 primary 与至少 W 个副本完成数据同步后作为新的 primary 提供读写服务。首先，R 个副本中版本号最高的副本一定蕴含了最新的成功提交的数据。再者，虽然不能确定最高版本号的数是一个成功提交的数据，但新的 primary 在随后与 secondary 同步数据，使得该版本的副本个数达到 W，从而使得该版本的数据成为成功提交的数据。</p>
+<h2 id="GFS-中的-Quorum"><a href="#GFS-中的-Quorum" class="headerlink" title="GFS 中的 Quorum"></a>GFS 中的 Quorum</h2><p>GFS 使用 WARO 机制读写副本，即如果更新所有副本成功则认为更新成功，一旦更新成功，则可以任意选择一个副本读取数据;如果更新某个副本失败，则更显失败，副本之间处于不一致的状态。GFS 系统不保证异常状态时副本的一致性，GFS 系统需要上层应用通过 Checksum 等机制自行判断数据是否合法。值得注意的是 GFS 中的 append 操作，一旦 append 操作某个 chunck 的副本上失败，GFS 系统会自动新增一个 chunck 并尝试 append 操作，由于可以让新增的 chunck 在正常的机器上创建，从而解决了由于 WARO 造成的系统可用性下降问题。进而在 GFS 中，append 操作不保证一定在文件的结尾进行，由于在新增的 chunk 上重试 append，append 的数据可能会出现多份重复的现象，但每个 append 操作会返回用户最终成功的 offset 位置，在这个位置上，任意读取某个副本一定可以读到写入的数据。这种在新增 chunk 上进行尝试的思路，大大增大了系统的容错能力，提高了系统可用性，是一种非常值得借鉴的设计思路。</p>
 <p>分布式系统原理介绍</p>
 <h1 id="日志技术"><a href="#日志技术" class="headerlink" title="日志技术"></a>日志技术</h1><blockquote>
 <p>日志技术是宕机恢复的主要技术之一</p>
@@ -780,8 +786,9 @@
 <li>1)该种协议下的副本始终是强一致性</li>
 <li>2)服务始终是可用的</li>
 <li>3)协议可以容忍任何网络分区异常</li>
-<li>分布式系统协议只能在 CAP 这三者间所有折中<h2 id="CAP理论的意义："><a href="#CAP理论的意义：" class="headerlink" title="CAP理论的意义："></a>CAP理论的意义：</h2>热力学第二定律说明了永动机是不可能存在的，不要去妄图设计永动机。与之类似，CAP 理论的意义就在于明确提出了不要去妄图设计一种对 CAP 三大属性都完全拥有的完美系统，因为这种系统在理论上就已经被证明不存在。</li>
+<li>分布式系统协议只能在 CAP 这三者间所有折中</li>
 </ul>
+<h2 id="CAP理论的意义："><a href="#CAP理论的意义：" class="headerlink" title="CAP理论的意义："></a>CAP理论的意义：</h2><p>热力学第二定律说明了永动机是不可能存在的，不要去妄图设计永动机。与之类似，CAP 理论的意义就在于明确提出了不要去妄图设计一种对 CAP 三大属性都完全拥有的完美系统，因为这种系统在理论上就已经被证明不存在。</p>
 
       
     </div>
@@ -959,7 +966,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式系统基础"><span class="nav-number">1.</span> <span class="nav-text">分布式系统基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的异常情况"><span class="nav-number">1.2.</span> <span class="nav-text">常见的异常情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本："><span class="nav-number">1.3.</span> <span class="nav-text">副本：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#衡量分布式系统的指标："><span class="nav-number">1.4.</span> <span class="nav-text">衡量分布式系统的指标：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分布方式"><span class="nav-number">2.</span> <span class="nav-text">数据分布方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式VS单机："><span class="nav-number">2.1.</span> <span class="nav-text">分布式VS单机：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本与数据分布"><span class="nav-number">2.2.</span> <span class="nav-text">副本与数据分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#副本控制协议："><span class="nav-number">3.</span> <span class="nav-text">副本控制协议：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#中心化副本控制协议："><span class="nav-number">3.1.</span> <span class="nav-text">中心化副本控制协议：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Primary-secondary协议"><span class="nav-number">3.1.1.</span> <span class="nav-text">Primary-secondary协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#去中心化副本控制协议"><span class="nav-number">3.2.</span> <span class="nav-text">去中心化副本控制协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lease机制"><span class="nav-number">4.</span> <span class="nav-text">Lease机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的例子："><span class="nav-number">4.0.1.</span> <span class="nav-text">简单的例子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lease机制的本质："><span class="nav-number">4.0.2.</span> <span class="nav-text">lease机制的本质：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于-lease-机制确定节点状态"><span class="nav-number">4.0.3.</span> <span class="nav-text">基于 lease 机制确定节点状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lease-的有效期时间选择"><span class="nav-number">4.0.4.</span> <span class="nav-text">lease 的有效期时间选择:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GFS-中的-Lease"><span class="nav-number">4.0.5.</span> <span class="nav-text">GFS 中的 Lease</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chubby-与-Zookeeper-中的-Lease"><span class="nav-number">4.0.6.</span> <span class="nav-text">Chubby 与 Zookeeper 中的 Lease</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Quorum-机制"><span class="nav-number">5.</span> <span class="nav-text">Quorum 机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#write-all-read-one"><span class="nav-number">5.1.</span> <span class="nav-text">write-all-read-one</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quorum-定义"><span class="nav-number">5.2.</span> <span class="nav-text">Quorum 定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quorum-机制下达到强一致系统"><span class="nav-number">5.3.</span> <span class="nav-text">quorum 机制下达到强一致系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-Quorum-机制选择-primary"><span class="nav-number">5.4.</span> <span class="nav-text">基于 Quorum 机制选择 primary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GFS-中的-Quorum"><span class="nav-number">5.4.1.</span> <span class="nav-text">GFS 中的 Quorum</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志技术"><span class="nav-number">6.</span> <span class="nav-text">日志技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redo-Log"><span class="nav-number">6.1.</span> <span class="nav-text">Redo Log:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Check-point"><span class="nav-number">6.2.</span> <span class="nav-text">Check point:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Paxos-协议："><span class="nav-number">7.</span> <span class="nav-text">Paxos 协议：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CAP-理论"><span class="nav-number">8.</span> <span class="nav-text">CAP 理论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP-理论的定义"><span class="nav-number">8.1.</span> <span class="nav-text">CAP 理论的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论的意义："><span class="nav-number">8.2.</span> <span class="nav-text">CAP理论的意义：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式系统基础"><span class="nav-number">1.</span> <span class="nav-text">分布式系统基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的异常情况"><span class="nav-number">1.2.</span> <span class="nav-text">常见的异常情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本："><span class="nav-number">1.3.</span> <span class="nav-text">副本：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#衡量分布式系统的指标："><span class="nav-number">1.4.</span> <span class="nav-text">衡量分布式系统的指标：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分布方式"><span class="nav-number">2.</span> <span class="nav-text">数据分布方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式VS单机："><span class="nav-number">2.1.</span> <span class="nav-text">分布式VS单机：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#副本与数据分布"><span class="nav-number">2.2.</span> <span class="nav-text">副本与数据分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#副本控制协议："><span class="nav-number">3.</span> <span class="nav-text">副本控制协议：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#中心化副本控制协议："><span class="nav-number">3.1.</span> <span class="nav-text">中心化副本控制协议：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Primary-secondary协议"><span class="nav-number">3.1.1.</span> <span class="nav-text">Primary-secondary协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#去中心化副本控制协议"><span class="nav-number">3.2.</span> <span class="nav-text">去中心化副本控制协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lease机制"><span class="nav-number">4.</span> <span class="nav-text">Lease机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的例子："><span class="nav-number">4.0.1.</span> <span class="nav-text">简单的例子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lease机制的本质："><span class="nav-number">4.0.2.</span> <span class="nav-text">lease机制的本质：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于-lease-机制确定节点状态"><span class="nav-number">4.0.3.</span> <span class="nav-text">基于 lease 机制确定节点状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lease-的有效期时间选择"><span class="nav-number">4.0.4.</span> <span class="nav-text">lease 的有效期时间选择:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GFS-中的-Lease"><span class="nav-number">4.0.5.</span> <span class="nav-text">GFS 中的 Lease</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chubby-与-Zookeeper-中的-Lease"><span class="nav-number">4.0.6.</span> <span class="nav-text">Chubby 与 Zookeeper 中的 Lease</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Quorum-机制"><span class="nav-number">5.</span> <span class="nav-text">Quorum 机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#write-all-read-one"><span class="nav-number">5.1.</span> <span class="nav-text">write-all-read-one</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quorum-定义"><span class="nav-number">5.2.</span> <span class="nav-text">Quorum 定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quorum-机制下达到强一致系统"><span class="nav-number">5.3.</span> <span class="nav-text">quorum 机制下达到强一致系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-Quorum-机制选择-primary"><span class="nav-number">5.4.</span> <span class="nav-text">基于 Quorum 机制选择 primary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS-中的-Quorum"><span class="nav-number">5.5.</span> <span class="nav-text">GFS 中的 Quorum</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志技术"><span class="nav-number">6.</span> <span class="nav-text">日志技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redo-Log"><span class="nav-number">6.1.</span> <span class="nav-text">Redo Log:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Check-point"><span class="nav-number">6.2.</span> <span class="nav-text">Check point:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Paxos-协议："><span class="nav-number">7.</span> <span class="nav-text">Paxos 协议：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CAP-理论"><span class="nav-number">8.</span> <span class="nav-text">CAP 理论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP-理论的定义"><span class="nav-number">8.1.</span> <span class="nav-text">CAP 理论的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论的意义："><span class="nav-number">8.2.</span> <span class="nav-text">CAP理论的意义：</span></a></li></ol></li></ol></div>
             
 
           </div>
