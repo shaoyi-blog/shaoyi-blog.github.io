@@ -88,18 +88,18 @@
 
 
 
-<meta name="description" content="relationship三个部件: worker 、executor TASK worker: work中运行的是拓扑的子集  一个worker 进程是从属于某个特定的拓扑的  在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成 executor:    一个 executor 是由 worker进程生成的">
+<meta name="description" content="relationship三个部件: worker 、executor TASK worker:  work中运行的是拓扑的子集 一个worker 进程是从属于某个特定的拓扑的 在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成  executor:  一个 executor 是由 worker进程生成的一个">
 <meta name="keywords" content="Storm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="storm并发度">
 <meta property="og:url" content="http://yoursite.com/2018/06/17/storm并发度/index.html">
 <meta property="og:site_name" content="少亦的平行空间">
-<meta property="og:description" content="relationship三个部件: worker 、executor TASK worker: work中运行的是拓扑的子集  一个worker 进程是从属于某个特定的拓扑的  在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成 executor:    一个 executor 是由 worker进程生成的">
+<meta property="og:description" content="relationship三个部件: worker 、executor TASK worker:  work中运行的是拓扑的子集 一个worker 进程是从属于某个特定的拓扑的 在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成  executor:  一个 executor 是由 worker进程生成的一个">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-17T08:46:04.000Z">
+<meta property="og:updated_time" content="2018-06-17T08:50:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="storm并发度">
-<meta name="twitter:description" content="relationship三个部件: worker 、executor TASK worker: work中运行的是拓扑的子集  一个worker 进程是从属于某个特定的拓扑的  在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成 executor:    一个 executor 是由 worker进程生成的">
+<meta name="twitter:description" content="relationship三个部件: worker 、executor TASK worker:  work中运行的是拓扑的子集 一个worker 进程是从属于某个特定的拓扑的 在worker进程中运行着一个或这个多个与拓扑组件相关的excutor 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成  executor:  一个 executor 是由 worker进程生成的一个">
 
 
 
@@ -397,13 +397,39 @@
       
 
       
-        <p>relationship<br>三个部件: worker 、executor TASK</p>
-<p>worker:<br> work中运行的是拓扑的子集<br>  一个worker 进程是从属于某个特定的拓扑的<br>  在worker进程中运行着一个或这个多个与拓扑组件相关的excutor<br> 一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成</p>
-<p>executor:<br>    一个 executor 是由 worker进程生成的一个线程<br>    一个executor可能有一个或者多个task, 这些task为同一个组件（spout \ bolt）服务</p>
-<p>task:<br>        task是实际执行数据处理的最小单元（task不是线程）<br>        默认情况下每一个线程上运行一个task<br>         在拓扑的生命周期中每个组件的task的数量都是保持不变的。<br>在实际使用中，一般都是 一个executor只有一个 task<br>注释：<br>    在一个executor上运行多个ask并不能增加并行度， 对于一个executo 里的所有task, r始终只会有有一个线程，也就是说多个task只能串行的在executor上执行</p>
-<p>这样设计的意义在于：<br>    在拓扑启动后，exrcutor的数量是可以修改的<br>     拓扑上的task个数是不可修改的<br>    默认的关系： $executors &lt;= $tasks<br>所以1.tasks的作用是为了增加拓展性</p>
-<pre><code>2. 为了测试，如果开发机性能好的话，一个线程就可以跑很多task
-</code></pre><p>参考链接：<br><a href="http://storm.apache.org/releases/2.0.0-SNAPSHOT/Understanding-the-parallelism-of-a-Storm-topology.html" target="_blank" rel="noopener">Understanding-the-parallelism-of-a-Storm-topology</a></p>
+        <p><strong>relationship</strong><br>三个部件: worker 、executor TASK</p>
+<p><strong>worker</strong>:</p>
+<ul>
+<li>work中运行的是拓扑的子集</li>
+<li>一个worker 进程是从属于某个特定的拓扑的</li>
+<li>在worker进程中运行着一个或这个多个与拓扑组件相关的excutor</li>
+<li>一个运行中的拓扑就是由这些运行于Storm集群中的很多机器上的进程组成</li>
+</ul>
+<p><strong>executor</strong>:</p>
+<ul>
+<li>一个 executor 是由 worker进程生成的一个线程</li>
+<li>一个executor可能有一个或者多个task, 这些task为同一个组件（spout \ bolt）服务</li>
+</ul>
+<p><strong>task</strong>:</p>
+<ul>
+<li>task是实际执行数据处理的最小单元（task不是线程）</li>
+<li>默认情况下每一个线程上运行一个task</li>
+<li>在拓扑的生命周期中每个组件的task的数量都是保持不变的。  </li>
+</ul>
+<p>在实际使用中，一般都是 一个executor只有一个 task.   </p>
+<p><strong>注释</strong>：<br>    在一个executor上运行多个ask并不能增加并行度， 对于一个executo 里的所有task, r始终只会有有一个线程，也就是说多个task只能串行的在executor上执行</p>
+<p>这样设计的意义在于：  </p>
+<ul>
+<li>在拓扑启动后，exrcutor的数量是可以修改的</li>
+<li>拓扑上的task个数是不可修改的</li>
+<li>默认的关系： $executors &lt;= $tasks. </li>
+</ul>
+<p>所以</p>
+<ol>
+<li>tasks的作用是为了增加拓展性</li>
+<li>为了测试，如果开发机性能好的话，一个线程就可以跑很多task</li>
+</ol>
+<p>参考链接：<br><a href="http://storm.apache.org/releases/2.0.0-SNAPSHOT/Understanding-the-parallelism-of-a-Storm-topology.html" target="_blank" rel="noopener">Understanding-the-parallelism-of-a-Storm-topology</a></p>
 
       
     </div>
