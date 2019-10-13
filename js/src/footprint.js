@@ -1,4 +1,4 @@
-var myChart = echarts.init(document.getElementById('myMap'));
+//var myChart = echarts.init(document.getElementById('myMap'));
 
 
 
@@ -141,7 +141,8 @@ option = {
                 show: false
             }
         },
-        roam: false,
+        roam: true,
+        zoom:1.5,
         itemStyle: {
             normal: {
                 areaColor: '#e6e6e6',
