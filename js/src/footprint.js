@@ -1,4 +1,4 @@
-//var myChart = echarts.init(document.getElementById('myMap'));
+var myChart = echarts.init(document.getElementById('myMap'));
 
 
 
