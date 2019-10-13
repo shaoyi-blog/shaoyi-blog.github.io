@@ -142,7 +142,7 @@ option = {
             }
         },
         roam: true,
-        zoom:1.5,
+        zoom:2,
         itemStyle: {
             normal: {
                 areaColor: '#e6e6e6',
